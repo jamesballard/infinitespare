@@ -11,6 +11,19 @@ download() {
 	curl -Lnfs -o $file $check $url
 }
 
+# git export
+# ideally we'd clone here, but memory requirements are too high
+github_export() {
+	repo=$1
+	branch=$2
+	dir=$3
+	tmp=/tmp/${repo//\/_}.${branch}.tar.gz
+
+	mkdir -p $dir
+	download $tmp https://github.com/$repo/archive/$branch.tar.gz
+	tar -zxf $tmp -C $dir --strip=2
+}
+
 echo Installing Infinite Rooms
 
 if [ $(id -u) -ne 0 ]; then
@@ -55,7 +68,7 @@ nc -z -w1 -v -v localhost 80
 
 echo Installoing Infinite Rooms
 stage=prod
-git clone git@github.com:jamesballard/infinitecake.git /var/www/$stage/infiniterooms
+github_export jamesballard/infinitecake master /var/www/$stage/infiniterooms
 
 echo Downloading Moodle
 download /tmp/moodle.tgz http://sourceforge.net/projects/moodle/files/Moodle/stable${MOODLE_VERSION}/moodle-latest-${MOODLE_VERSION}.tgz/download
@@ -72,5 +85,5 @@ chown www-data /var/moodle
 download /var/www/moodle/config.php $repo/moodle/config.php
 
 echo Installing Infinite Rooms Moodle Plugin
-git clone git@github.com:Tantalon/infinitemoodle.git /var/www/moodle/report/infiniterooms
+github_export Tantalon/infinitemoodle master /var/www/$stage/moodle/report/infiniterooms
 
