@@ -86,17 +86,19 @@ install_infiniterooms() {
 install_moodle() {
 	version=$1
 	stage=$2
+
+	installer=/tmp/moodle-latest-${version}.tgz
 	moodle_home=/var/www/$stage/moodle
 	moodle_data=/var/moodle/$stage
 
-	if [ ! -f /tmp/moodle-latest-${version}.tgz ]; then
+	if [ ! -f $installer ]; then
 		echo Downloading Moodle $version
-		download /tmp/moodle-latest-${version}.tgz http://sourceforge.net/projects/moodle/files/Moodle/stable${version}/moodle-latest-${version}.tgz/download
+		download $installer http://sourceforge.net/projects/moodle/files/Moodle/stable${version}/moodle-latest-${version}.tgz/download
 	fi
 
 	echo Installing Moodle $version to $stage
 	mkdir -p $moodle_home
-	tar -zxf /tmp/moodle-latest-${version}.tgz -C $moodle_home --strip=2
+	tar -zxf $installer -C $moodle_home --strip=2
 
 	echo Configuring Moodle $stage
 	# Create data store
