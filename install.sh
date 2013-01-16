@@ -24,9 +24,7 @@ require_root() {
 download() {
 	file=$1
 	url=$2
-	check=""
-	[ ! -f $file ] || check="-z $file"
-	curl -Lnfs -o $file $check $url
+	[ -f $file ] || curl -Lnfs -o $file $url
 }
 
 # git export
@@ -92,16 +90,10 @@ install_moodle() {
 	moodle_home=/var/www/$stage/moodle
 	moodle_data=/var/moodle/$stage
 
-	if [ ! -f $installer ]; then
-		echo Downloading Moodle $version
-		download $installer http://sourceforge.net/projects/moodle/files/Moodle/stable${version}/moodle-latest-${version}.tgz/download
-	fi
-
 	echo Installing Moodle $version to $stage
 	mkdir -p $moodle_home
+	download $installer http://sourceforge.net/projects/moodle/files/Moodle/stable${version}/moodle-latest-${version}.tgz/download
 	tar -zxf $installer -C $moodle_home --strip=2
-
-	echo Configuring Moodle $stage
 
 	# Create data store
 	mkdir -p $moodle_data
@@ -109,9 +101,8 @@ install_moodle() {
 
 	# Download configuration file
 	download - $repo/moodle/config.php | sed -e "s/\\\$stage = '.*';/\\\$stage = '$stage';/" > $moodle_home/config.php
-	
 
-	echo Installing Infinite Rooms Moodle Plugin for $stage
+	# Installing Infinite Rooms Moodle Plugin
 	github_export Tantalon/infinitemoodle master $moodle_home/report/infiniterooms
 }
 
