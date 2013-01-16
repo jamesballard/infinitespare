@@ -56,7 +56,7 @@ install_system() {
 		echo "$key" >> /home/$user/.ssh/authorized_keys
 	done
 
-	echo Installing required packages
+	echo Installing dependencies
 	apt-get -qqy update
 	apt-get -qqy install git mysql-client apache2 libapache2-mod-php5 php5-curl php5-gd php5-ldap php5-mysql php5-xmlrpc wwwconfig-common zip unzip php-pear php5-intl
 
