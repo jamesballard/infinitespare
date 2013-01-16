@@ -4,17 +4,22 @@ repo=https://github.com/jamesballard/infinitespare/raw/master
 
 echo Installing Infinite Rooms
 
+if [ $(id -u) -ne 0 ]; then
+	echo
+	echo Installation must be run as root
+	exit 1
+fi
+
 echo
 echo Setting up users
-curl -Ln $repo/users.csv | while read user key; do
+curl -Lnf $repo/users | while read user key; do
 	echo + $user
-	sudo adduser $user admin
+	adduser $user admin
 
-	sudo mkdir -p /home/$user/.ssh
-	sudo touch /home/$user/.ssh/authorized_keys
-	sudo chown -R $user:$user /home/$user/.ssh
-	sudo chmod 600 /home/$user/.ssh/authorized_keys
+	mkdir -p /home/$user/.ssh
+	touch /home/$user/.ssh/authorized_keys
+	chown -R $user:$user /home/$user/.ssh
+	chmod 600 /home/$user/.ssh/authorized_keys
 
-	echo "$key" | sudo tee -a /home/$user/.ssh/authorized_keys > /dev/null
+	echo "$key" | tee -a /home/$user/.ssh/authorized_keys > /dev/null
 done
-
