@@ -17,7 +17,7 @@ github_export() {
 	repo=$1
 	branch=$2
 	dir=$3
-	tmp=/tmp/${repo//\/_}.${branch}.tar.gz
+	tmp=/tmp/${repo//\//_}.${branch}.tar.gz
 
 	mkdir -p $dir
 	download $tmp https://github.com/$repo/archive/$branch.tar.gz
