@@ -24,6 +24,7 @@ require_root() {
 download() {
 	file=$1
 	url=$2
+	check=""
 	[ ! -f $file ] || check="-z $file"
 	curl -Lnfs -o $file $check $url
 }
