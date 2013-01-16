@@ -45,7 +45,7 @@ EOF
 echo Testing database connectivity
 nc -z -w1 -v -v db.infiniterooms.co.uk 3306
 
-if ! service apache2 status; then
+if ! service apache2 status >/dev/null; then
 	echo Starting Apache
 	service apache2 start
 fi
