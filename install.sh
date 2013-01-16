@@ -12,7 +12,7 @@ fi
 
 echo
 echo Setting up users
-curl -Lnf $repo/users | while read user key; do
+curl -Lnfs $repo/users | while read user key; do
 	echo + $user
 	adduser $user admin
 
