@@ -27,8 +27,8 @@ curl -Lnfs $repo/users | while read user key; do
 done
 
 echo Installing required packages
-apt-get -qy update
-apt-get -qy install git mysql-client apache2 libapache2-mod-php5 php5-curl php5-gd php5-ldap php5-mysql php5-xmlrpc wwwconfig-common zip unzip php-pear php5-intl
+apt-get -qqy update
+apt-get -qqy install git mysql-client apache2 libapache2-mod-php5 php5-curl php5-gd php5-ldap php5-mysql php5-xmlrpc wwwconfig-common zip unzip php-pear php5-intl
 
 echo Setting up host aliases
 cat >> /etc/hosts <<EOF
@@ -46,7 +46,7 @@ nc -z -w1 -v -v localhost 80
 
 echo Installing Moodle
 mkdir -p /var/www/moodle
-wget -O /tmp/moodle.tgz http://sourceforge.net/projects/moodle/files/Moodle/stable${MOODLE_VERSION}/moodle-latest-${MOODLE_VERSION}.tgz/download
+wget -q -O /tmp/moodle.tgz http://sourceforge.net/projects/moodle/files/Moodle/stable${MOODLE_VERSION}/moodle-latest-${MOODLE_VERSION}.tgz/download
 tar -zxf /tmp/moodle.tgz -C /var/www/moodle --strip=2
 rm /tmp/moodle.tgz
 
