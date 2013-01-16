@@ -102,11 +102,14 @@ install_moodle() {
 	tar -zxf $installer -C $moodle_home --strip=2
 
 	echo Configuring Moodle $stage
+
 	# Create data store
 	mkdir -p $moodle_data
 	chown www-data $moodle_data
+
 	# Download configuration file
-	download $moodle_home/config.php $repo/moodle/config.php
+	download - $repo/moodle/config.php | sed -e "s/\\\$stage = '.*';/\\\$stage = '$stage';/" > $moodle_home/config.php
+	
 
 	echo Installing Infinite Rooms Moodle Plugin for $stage
 	github_export Tantalon/infinitemoodle master $moodle_home/report/infiniterooms
