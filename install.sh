@@ -66,7 +66,7 @@ fi
 echo Testing Apache
 nc -z -w1 -v -v localhost 80
 
-echo Installoing Infinite Rooms
+echo Installing Infinite Rooms
 stage=prod
 github_export jamesballard/infinitecake master /var/www/$stage/infiniterooms
 
