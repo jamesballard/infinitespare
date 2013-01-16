@@ -51,9 +51,7 @@ apt-get -qqy update
 apt-get -qqy install git mysql-client apache2 libapache2-mod-php5 php5-curl php5-gd php5-ldap php5-mysql php5-xmlrpc wwwconfig-common zip unzip php-pear php5-intl
 
 echo Setting up host aliases
-cat >> /etc/hosts <<EOF
-10.234.133.136 db.infiniterooms.co.uk
-EOF
+download - $repo/hosts >> /etc/hosts
 
 echo Testing database connectivity
 nc -z -w1 -v -v db.infiniterooms.co.uk 3306
