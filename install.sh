@@ -2,10 +2,12 @@
 set -e
 
 export repo=https://github.com/jamesballard/infinitespare/raw/master
+export configsrc=/tmp/infiniteroomssettings
 
 main() {
 	require_root
 	echo Installing Infinite Rooms
+	bootstrap
 	install_system
 	install_infiniterooms master prod
 	install_infiniterooms master demo
@@ -19,6 +21,11 @@ require_root() {
                 echo Installation must be run as root
                 exit 1
         fi
+}
+
+bootstrap() {
+	echo Downloading settings
+	github_export jamesballard/infinitespare master $configsrc
 }
 
 download() {
@@ -42,7 +49,7 @@ github_export() {
 
 install_system() {
 	echo Setting up users
-	download - $repo/users | while read user key; do
+	cat $configsrc/users | while read user key; do
 		adduser -q $user 2>/dev/null || true
 		adduser -q $user admin || true
 		
@@ -61,18 +68,18 @@ install_system() {
 	apt-get -qqy install git mysql-client apache2 libapache2-mod-php5 php5-curl php5-gd php5-ldap php5-mysql php5-xmlrpc wwwconfig-common zip unzip php-pear php5-intl
 
 	echo Setting up host aliases
-	download - $repo/hosts >> /etc/hosts
+	cat $configsrc/hosts >> /etc/hosts
 
 	echo Testing database connectivity
 	nc -z -w1 -v -v db.infiniterooms.co.uk 3306
 
-	if ! service apache2 status >/dev/null; then
-		echo Starting Apache
-		service apache2 start
-	fi
+	echo Setting up Apache
+	cp -rp $configsrc/apache2/* /etc/apache2/
 
-	echo Testing Apache
-	nc -z -w1 -v -v localhost 80
+	if service apache2 status >/dev/null; then
+		echo Restarting Apache
+		service apache2 restart
+	fi
 }
 
 install_infiniterooms() {
