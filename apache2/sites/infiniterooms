@@ -1,0 +1,19 @@
+<VirtualHost *:80>
+	ServerName www.infiniterooms.co.uk
+	ServerAdmin support@infiniterooms.co.uk
+
+	DocumentRoot /var/www/prod/infiniterooms
+
+	<Directory /var/www/prod/infiniterooms>
+		Options FollowSymLinks
+		AllowOverride None
+
+		Order allow,deny
+		Allow from all
+	</Directory>
+
+	LogLevel warn
+	ErrorLog ${APACHE_LOG_DIR}/infiniterooms-error.log
+	CustomLog ${APACHE_LOG_DIR}/infiniterooms-access.log vhost_combined
+
+</VirtualHost>
