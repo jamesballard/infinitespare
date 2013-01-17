@@ -16,6 +16,11 @@ main() {
 	install_moodle 22 dev
 }
 
+dedup() {
+	# no comment!
+	((( cat -n | tee /dev/fd/5 | egrep '^[[:space:]]*[[:digit:]]+[[:space:]]*$' 1>&4 ) 5>&1 | egrep -v '^[[:space:]]*[[:digit:]]+[[:space:]]*$' | sort -k2,2 -u ) 4>&1 ) | sort -k1,1 -n | cut -f2-
+}
+
 require_root() {
         if [ $(id -u) -ne 0 ]; then
                 echo Installation must be run as root
@@ -68,7 +73,7 @@ install_system() {
 	apt-get -qqy install git mysql-client apache2 libapache2-mod-php5 php5-curl php5-gd php5-ldap php5-mysql php5-xmlrpc wwwconfig-common zip unzip php-pear php5-intl
 
 	echo Setting up host aliases
-	cat $configsrc/hosts >> /etc/hosts
+	cat /etc/hosts $configsrc/hosts | dedup > /etc/hosts
 
 	echo Testing database connectivity
 	nc -z -w1 -v -v db.infiniterooms.co.uk 3306
