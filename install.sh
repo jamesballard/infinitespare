@@ -44,7 +44,7 @@ github_export() {
 
 	mkdir -p $dir
 	download $tmp https://github.com/$repo/archive/$branch.tar.gz
-	tar -zxf $tmp -C $dir --strip=2
+	tar -zxf $tmp -C $dir --strip=1
 }
 
 install_system() {
