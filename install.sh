@@ -93,8 +93,9 @@ install_infiniterooms() {
 	echo Installing Infinite Rooms $branch to $stage
 	github_export jamesballard/infinitecake $branch /var/www/$stage/infiniterooms
 	cd /var/www/$stage/infiniterooms
-	# use https rather than ssh for protected URLs, to share the netrc authentication
-	git config submodule.webroot/api.url https://github.com/jamesballard/infiniteimport.git
+	# use http rather than ssh for accessing github, because it uses netrc, and doesn't require the ssh host trust
+	git config --list | gsed -re 's_^(submodule\..*\.url)=git(://|@)github.com[:/]_\1 https://github.com/_p' | xargs -n2 git config
+	# download submodules
 	git submodule update --init
 }
 
