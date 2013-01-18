@@ -40,16 +40,15 @@ download() {
 }
 
 # git export
-# ideally we'd clone here, but memory requirements are too high
 github_export() {
 	repo=$1
 	branch=$2
 	dir=$3
-	tmp=/tmp/${repo//\//_}.${branch}.tar.gz
 
-	mkdir -p $dir
-	download $tmp https://github.com/$repo/archive/$branch.tar.gz
-	tar -zxf $tmp -C $dir --strip=1
+	if [ ! -d $dir ]; then
+		echo Cloning $repo to $dir
+		git clone -q -b $branch --recursive https://github.com/$repo.git $dir
+	fi
 }
 
 install_system() {
