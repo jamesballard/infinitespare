@@ -47,7 +47,7 @@ github_export() {
 
 	if [ ! -d $dir ]; then
 		echo Cloning $repo to $dir
-		git clone -q -b $branch --recursive https://github.com/$repo.git $dir
+		git clone -q -b $branch https://github.com/$repo.git $dir
 	fi
 }
 
@@ -92,6 +92,10 @@ install_infiniterooms() {
 	stage=$2
 	echo Installing Infinite Rooms $branch to $stage
 	github_export jamesballard/infinitecake $branch /var/www/$stage/infiniterooms
+	cd /var/www/$stage/infiniterooms
+	# use https rather than ssh for protected URLs, to share the netrc authentication
+	git config submodule.webroot/api.url https://github.com/jamesballard/infiniteimport.git
+	git submodule update --init
 }
 
 install_moodle() {
