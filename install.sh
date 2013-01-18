@@ -93,9 +93,11 @@ install_infiniterooms() {
 	echo Installing Infinite Rooms $branch to $stage
 	github_export jamesballard/infinitecake $branch /var/www/$stage/infiniterooms
 	cd /var/www/$stage/infiniterooms
+	# load the list of submodule urls
+	git submodule init
 	# use http rather than ssh for accessing github, because it uses netrc, and doesn't require the ssh host trust
-	git config --list | sed -re 's_^(submodule\..*\.url)=git(://|@)github.com[:/]_\1 https://github.com/_p' | xargs -n2 git config
-	# download submodules
+	git config --list | sed -nre 's_^(submodule\..*\.url)=git(://|@)github.com[:/]_\1 https://github.com/_p' | xargs -n2 git config
+	# clone submodules
 	git submodule update --init
 }
 
