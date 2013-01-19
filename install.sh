@@ -90,8 +90,10 @@ install_system() {
 install_infiniterooms() {
 	branch=$1
 	stage=$2
+
 	echo Installing Infinite Rooms $branch to $stage
 	github_export jamesballard/infinitecake $branch /var/www/$stage/infiniterooms
+
 	cd /var/www/$stage/infiniterooms
 	# load the list of submodule urls
 	git submodule init
@@ -99,6 +101,15 @@ install_infiniterooms() {
 	git config --list | sed -nre 's_^(submodule\..*\.url)=git(://|@)github.com[:/]_\1 https://github.com/_p' | xargs -n2 git config
 	# clone submodules
 	git submodule update --init
+	
+	# Create temporary folder, and add a link
+	mkdir -p /var/infiniterooms/$stage
+	mkdir -p /var/infiniterooms/$stage/cache/{models,persistent}
+	mkdir -p /var/log/infiniterooms/$stage
+	chown -R www-data /var/infiniterooms/$stage
+	chown -R www-data /var/log/infiniterooms/$stage
+	ln -s /var/infiniterooms/$stage /var/www/$stage/infiniterooms/tmp
+	ln -s /var/log/infiniterooms/$stage /var/www/$stage/infiniterooms/logs
 }
 
 install_moodle() {
