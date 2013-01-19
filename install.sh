@@ -119,7 +119,7 @@ install_moodle() {
 	chown www-data $moodle_data
 
 	# Download configuration file
-	download - $repo/moodle/config.php | sed -e "s/\\\$stage = '.*';/\\\$stage = '$stage';/" > $moodle_home/config.php
+	cat $configsrc/moodle/config.php | sed -e "s/\\\$stage = '.*';/\\\$stage = '$stage';/" > $moodle_home/config.php
 
 	# Installing Infinite Rooms Moodle Plugin
 	github_export Tantalon/infinitemoodle master $moodle_home/report/infiniterooms
