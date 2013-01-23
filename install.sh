@@ -109,7 +109,7 @@ install_infiniterooms() {
 	chown -R www-data /var/infiniterooms/$stage
 	chown -R www-data /var/log/infiniterooms/$stage
 	ln -s /var/infiniterooms/$stage /var/www/$stage/infiniterooms/tmp
-	ln -s /var/log/infiniterooms/$stage /var/www/$stage/infiniterooms/logs
+	ln -s /var/log/infiniterooms/$stage /var/www/$stage/infiniterooms/tmp/logs
 }
 
 install_moodle() {
