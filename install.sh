@@ -98,7 +98,7 @@ install_infiniterooms() {
 	# load the list of submodule urls
 	git submodule init
 	# use http rather than ssh for accessing github, because it uses netrc, and doesn't require the ssh host trust
-	git config --list | sed -nre 's_^(submodule\..*\.url)=git(://|@)github.com[:/]_\1 https://github.com/_p' | xargs -n2 git config
+	git config --list | sed -nre 's_^(submodule\..*\.url)=git(://|@)github.com[:/]_\1 https://github.com/_p' | xargs -r -n2 git config
 	# clone submodules
 	git submodule update --init
 	
