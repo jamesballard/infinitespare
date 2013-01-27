@@ -108,8 +108,8 @@ install_infiniterooms() {
 	mkdir -p /var/log/infiniterooms/$stage
 	chown -R www-data /var/infiniterooms/$stage
 	chown -R www-data /var/log/infiniterooms/$stage
-	ln -s /var/infiniterooms/$stage /var/www/$stage/infiniterooms/tmp
-	ln -s /var/log/infiniterooms/$stage /var/www/$stage/infiniterooms/tmp/logs
+	ln -sf /var/infiniterooms/$stage /var/www/$stage/infiniterooms/tmp
+	ln -sf /var/log/infiniterooms/$stage /var/www/$stage/infiniterooms/tmp/logs
 
 	# Copy configuration overlay
 	if [ -d $configsrc/infiniterooms/$stage/ ]; then
