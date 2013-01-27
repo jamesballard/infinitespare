@@ -110,6 +110,11 @@ install_infiniterooms() {
 	chown -R www-data /var/log/infiniterooms/$stage
 	ln -s /var/infiniterooms/$stage /var/www/$stage/infiniterooms/tmp
 	ln -s /var/log/infiniterooms/$stage /var/www/$stage/infiniterooms/tmp/logs
+
+	# Copy configuration overlay
+	if [ -d $configsrc/infiniterooms/$stage/ ]; then
+		rsync -rl $configsrc/infiniterooms/$stage/ /var/infiniterooms/$stage/
+	fi
 }
 
 install_moodle() {
@@ -134,6 +139,11 @@ install_moodle() {
 
 	# Installing Infinite Rooms Moodle Plugin
 	github_export Tantalon/infinitemoodle master $moodle_home/report/infiniterooms
+
+	# Copy configuration overlay
+	if [ -d $configsrc/moodle/$stage/ ]; then
+		rsync -rl $configsrc/moodle/$stage/ $moodle_home/
+	fi
 }
 
 main

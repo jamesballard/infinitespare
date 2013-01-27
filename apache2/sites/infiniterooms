@@ -2,6 +2,10 @@
 	ServerName www.infiniterooms.co.uk
 	ServerAdmin support@infiniterooms.co.uk
 
+	LogLevel warn
+	ErrorLog ${APACHE_LOG_DIR}/infiniterooms-error.log
+	CustomLog ${APACHE_LOG_DIR}/infiniterooms-access.log vhost_combined
+
 	DocumentRoot /var/www/prod/infiniterooms
 
 	<Directory /var/www/prod/infiniterooms>
@@ -10,10 +14,17 @@
 
 		Order allow,deny
 		Allow from all
+
+		RewriteEngine on
+		RewriteRule ^$ webroot/ [L]
+		RewriteRule (.*) webroot/$1 [L]
 	</Directory>
 
-	LogLevel warn
-	ErrorLog ${APACHE_LOG_DIR}/infiniterooms-error.log
-	CustomLog ${APACHE_LOG_DIR}/infiniterooms-access.log vhost_combined
+	<Directory /var/www/prod/infiniterooms/webroot>
+		RewriteEngine On
+		RewriteCond %{REQUEST_FILENAME} !-d
+		RewriteCond %{REQUEST_FILENAME} !-f
+		RewriteRule ^(.*)$ index.php [QSA,L]
+	</Directory>
 
 </VirtualHost>

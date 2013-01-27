@@ -1,0 +1,11 @@
+<VirtualHost *:80>
+	ServerAdmin support@infiniterooms.co.uk
+
+	LogLevel warn
+	ErrorLog ${APACHE_LOG_DIR}/nosite-error.log
+	CustomLog ${APACHE_LOG_DIR}/nosite-access.log vhost_combined
+
+	RewriteEngine On
+	RewriteRule .* http://www.infiniterooms.co.uk/ [L,R]
+
+</VirtualHost>
