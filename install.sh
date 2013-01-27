@@ -54,6 +54,10 @@ github_export() {
 	fi
 }
 
+cake() {
+	su www-data Console/cake "$@"
+}
+
 install_system() {
 	echo Setting up users
 	cat $configsrc/users | while read user key; do
@@ -117,6 +121,35 @@ install_infiniterooms() {
 	# Copy configuration overlay
 	if [ -d $configsrc/infiniterooms/$stage/ ]; then
 		rsync -rl $configsrc/infiniterooms/$stage/ /var/infiniterooms/$stage/
+	fi
+
+	# Check the database
+	dbconf=/var/infiniterooms/$stage/Config/database.php
+	dbname=ir_$stage
+	if [ -f $dbconf ] && ! (mysql -BNe "show databases" | grep -q $dbname); then
+		dbuser=ir_$stage
+		dbpass=$(sed -ne "s/.*'password' => '\(.*\)',/\1/p" $dbconf | head -1)
+
+		mysqladmin create $dbname
+		mysql -BNe "grant all privileges in $dbname.* to $dbuser@'% identified by '$dbpass';" $dbname
+		cat infinitecake.sql memberships.sql members.sql | grep -v "^USE" | sed -e 's/DEFINER=`root`@`localhost`//' | mysql -B $dbname
+
+		cd /var/infiniterooms/$stage/
+		cake acl create aco root controllers
+		cake AclExtras.AclExtras aco_sync
+		# these fail!
+		#cake acl grant Membership::Administrators controllers
+		#cake acl grant Membership::Managers Conditions
+		#cake acl grant Membership::Managers Groups
+		#cake acl grant Membership::Managers Members
+		#cake acl grant Membership::Managers Modules
+		#cake acl grant Membership::Managers People
+		#cake acl grant Membership::Managers Rules
+		#cake acl grant Membership::Managers Systems
+		#cake acl grant Membership::Managers Users
+		#cake acl grant Membership::Users UserProfile
+		#cake acl grant Membership::Users CourseProfile
+		#cake acl grant Membership::Users Stats
 	fi
 }
 
