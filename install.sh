@@ -48,6 +48,9 @@ github_export() {
 	if [ ! -d $dir ]; then
 		echo Cloning $repo to $dir
 		git clone -q -b $branch https://github.com/$repo.git $dir
+	else
+		echo Updating $dir
+		(cd $dir; git pull -q --recurse-submodules=yes)
 	fi
 }
 
