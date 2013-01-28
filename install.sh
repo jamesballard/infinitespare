@@ -16,6 +16,10 @@ main() {
 	install_moodle 22 dev
 }
 
+randpw() {
+	< /dev/urandom tr -dc A-Za-z0-9 | head -c32
+}
+
 dedup() {
 	# no comment!
 	((( cat -n | tee /dev/fd/5 | egrep '^[[:space:]]*[[:digit:]]+[[:space:]]*$' 1>&4 ) 5>&1 | egrep -v '^[[:space:]]*[[:digit:]]+[[:space:]]*$' | sort -k2,2 -u ) 4>&1 ) | sort -k1,1 -n | cut -f2-
@@ -126,15 +130,39 @@ install_infiniterooms() {
 	# Check the database
 	dbconf=/var/infiniterooms/$stage/Config/database.php
 	dbname=ir_$stage
-	if [ -f $dbconf ] && ! (mysql -BNe "show databases" | grep -q $dbname); then
+	dbnew=$( ( mysql -BNe "show databases" | grep -q $dbname ) && echo false || echo true)
+
+	# create database if it's missing
+	$dbnew && mysqladmin create $dbname
+
+	# if either conf or db is missing, setup permissions
+	if [ ! -f $dbconf ] || $dbnew; then
 		dbuser=ir_$stage
-		dbpass=$(sed -ne "s/.*'password' => '\(.*\)',/\1/p" $dbconf | head -1)
+		dbpass=$(randpw)
+		cat >> $dbconf <<EOF
+<?php
+class DATABASE_CONFIG {
 
-		mysqladmin create $dbname
+        public $default = array(
+                'datasource' => 'Database/Mysql',
+                'persistent' => false,
+                'host' => 'db.infiniterooms.co.uk',
+                'login' => '$dbuser',
+                'password' => '$dbpass',
+                'database' => '$dbname',
+                'prefix' => '',
+                //'encoding' => 'utf8',
+        );
+EOF
+
 		mysql -BNe "grant all privileges on $dbname.* to $dbuser@'% identified by '$dbpass';" $dbname
-		cat infinitecake.sql memberships.sql members.sql | grep -v "^USE" | sed -e 's/DEFINER=`root`@`localhost`//' | mysql -B $dbname
+	fi
 
+	# if database is new, populate it
+	if $dbnew; then
 		cd /var/infiniterooms/$stage/
+		cat Config/Schema/{infinitecake.sql,memberships.sql,members.sql} | grep -v "^USE" | sed -e 's/DEFINER=`root`@`localhost`//' | mysql -B $dbname
+
 		cake acl create aco root controllers
 		cake AclExtras.AclExtras aco_sync
 		# these fail!
