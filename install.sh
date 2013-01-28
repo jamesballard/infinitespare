@@ -128,7 +128,7 @@ install_infiniterooms() {
 	fi
 
 	# Check the database
-	dbconf=/var/infiniterooms/$stage/Config/database.php
+	dbconf=/var/www/$stage/infiniterooms/Config/database.php
 	dbname=ir_$stage
 	dbnew=$( ( mysql -BNe "show databases" | grep -q $dbname ) && echo false || echo true)
 
@@ -139,7 +139,7 @@ install_infiniterooms() {
 	if [ ! -f $dbconf ] || $dbnew; then
 		dbuser=ir_$stage
 		dbpass=$(randpw)
-		cat >> $dbconf <<EOF
+		cat > $dbconf <<EOF
 <?php
 class DATABASE_CONFIG {
 
