@@ -155,6 +155,7 @@ class DATABASE_CONFIG {
         );
 EOF
 
+		echo mysql -BNe "grant all privileges on $dbname.* to $dbuser@'% identified by '$dbpass';" $dbname
 		mysql -BNe "grant all privileges on $dbname.* to $dbuser@'% identified by '$dbpass';" $dbname
 	fi
 
