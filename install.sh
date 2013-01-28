@@ -131,7 +131,7 @@ install_infiniterooms() {
 		dbpass=$(sed -ne "s/.*'password' => '\(.*\)',/\1/p" $dbconf | head -1)
 
 		mysqladmin create $dbname
-		mysql -BNe "grant all privileges in $dbname.* to $dbuser@'% identified by '$dbpass';" $dbname
+		mysql -BNe "grant all privileges on $dbname.* to $dbuser@'% identified by '$dbpass';" $dbname
 		cat infinitecake.sql memberships.sql members.sql | grep -v "^USE" | sed -e 's/DEFINER=`root`@`localhost`//' | mysql -B $dbname
 
 		cd /var/infiniterooms/$stage/
