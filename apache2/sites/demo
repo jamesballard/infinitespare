@@ -1,0 +1,30 @@
+<VirtualHost *:80>
+	ServerName demo.infiniterooms.co.uk
+	ServerAdmin support@infiniterooms.co.uk
+
+	LogLevel warn
+	ErrorLog ${APACHE_LOG_DIR}/demo-error.log
+	CustomLog ${APACHE_LOG_DIR}/demo-access.log vhost_combined
+
+	DocumentRoot /var/www/demo/infiniterooms
+
+	<Directory /var/www/demo/infiniterooms>
+		Options FollowSymLinks
+		AllowOverride None
+
+		Order allow,deny
+		Allow from all
+
+		RewriteEngine on
+		RewriteRule ^$ webroot/ [L]
+		RewriteRule (.*) webroot/$1 [L]
+	</Directory>
+
+	<Directory /var/www/demo/infiniterooms/webroot>
+		RewriteEngine On
+		RewriteCond %{REQUEST_FILENAME} !-d
+		RewriteCond %{REQUEST_FILENAME} !-f
+		RewriteRule ^(.*)$ index.php [QSA,L]
+	</Directory>
+
+</VirtualHost>
