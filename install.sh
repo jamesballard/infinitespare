@@ -152,6 +152,7 @@ class DATABASE_CONFIG {
 		'prefix' => '',
 		//'encoding' => 'utf8',
 	);
+}
 EOF
 
 		mysql -BNe "grant all privileges on $dbname.* to $dbuser@'%' identified by '$dbpass';" $dbname
