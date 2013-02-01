@@ -159,7 +159,7 @@ EOF
 
 	# if database is new, populate it
 	if $dbnew; then
-		cd /var/infiniterooms/$stage/
+		cd /var/www/infiniterooms/$stage/
 		cat Config/Schema/{infinitecake.sql,memberships.sql,members.sql} | grep -v "^USE" | sed -e 's/DEFINER=`root`@`localhost`//' | mysql -B $dbname
 
 		cake acl create aco root controllers
