@@ -142,17 +142,16 @@ install_infiniterooms() {
 		cat > $dbconf <<EOF
 <?php
 class DATABASE_CONFIG {
-
-        public $default = array(
-                'datasource' => 'Database/Mysql',
-                'persistent' => false,
-                'host' => 'db.infiniterooms.co.uk',
-                'login' => '$dbuser',
-                'password' => '$dbpass',
-                'database' => '$dbname',
-                'prefix' => '',
-                //'encoding' => 'utf8',
-        );
+	public \$default = array(
+		'datasource' => 'Database/Mysql',
+		'persistent' => false,
+		'host' => 'db.infiniterooms.co.uk',
+		'login' => '$dbuser',
+		'password' => '$dbpass',
+		'database' => '$dbname',
+		'prefix' => '',
+		//'encoding' => 'utf8',
+	);
 EOF
 
 		mysql -BNe "grant all privileges on $dbname.* to $dbuser@'%' identified by '$dbpass';" $dbname
