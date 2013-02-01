@@ -165,19 +165,26 @@ EOF
 
 		cake acl create aco root controllers
 		cake AclExtras.AclExtras aco_sync
-		# these fail!
-		#cake acl grant Membership::Administrators controllers
-		#cake acl grant Membership::Managers Conditions
-		#cake acl grant Membership::Managers Groups
-		#cake acl grant Membership::Managers Members
-		#cake acl grant Membership::Managers Modules
-		#cake acl grant Membership::Managers People
-		#cake acl grant Membership::Managers Rules
-		#cake acl grant Membership::Managers Systems
-		#cake acl grant Membership::Managers Users
-		#cake acl grant Membership::Users UserProfile
-		#cake acl grant Membership::Users CourseProfile
-		#cake acl grant Membership::Users Stats
+		cake acl grant Membership::Administrators controllers
+		cake acl grant Membership::Managers controllers/Conditions
+		cake acl grant Membership::Managers controllers/Groups
+		cake acl grant Membership::Managers controllers/Members
+		cake acl grant Membership::Managers controllers/Modules
+		cake acl grant Membership::Managers controllers/Pages
+		cake acl grant Membership::Managers controllers/People
+		cake acl grant Membership::Managers controllers/Rules
+		cake acl grant Membership::Managers controllers/Systems
+		cake acl grant Membership::Managers controllers/Users
+		cake acl grant Membership::Managers controllers/UserProfile
+		cake acl grant Membership::Managers controllers/CourseProfile
+		cake acl grant Membership::Managers controllers/Stats
+		cake acl grant Membership::Managers jsonfeed
+		cake acl grant Membership::Users controllers/Pages
+		cake acl grant Membership::Users controllers/UserProfile
+		cake acl grant Membership::Users controllers/CourseProfile
+		cake acl grant Membership::Users controllers/Stats
+		cake acl grant Membership::Users jsonfeed
+
 	fi
 }
 
