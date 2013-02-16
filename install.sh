@@ -11,8 +11,10 @@ main() {
 	install_system
 	install_infiniterooms master prod
 	install_infiniterooms master demo
+	install_infiniterooms master pilot
 	install_infiniterooms develop dev
 	install_moodle 22 demo
+	install_moodle 22 pilot
 	install_moodle 22 dev
 }
 
